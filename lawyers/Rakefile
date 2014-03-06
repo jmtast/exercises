@@ -1,0 +1,9 @@
+task :default => [:test]
+
+task :test do
+  file_list = FileList['test/*.rb']
+  file_list.each do |t|
+    ruby t
+    puts "=============================================================================================="
+  end
+end
