@@ -3,7 +3,7 @@
 class Permission
   def initialize (source, destination, case_document)
     if (source.instance_of?(Lawyer) && destination.instance_of?(Lawyer))
-      if (case_document.get_owner == source)
+      if (case_document.owner == source)
         @source = source
         @destination = destination
         @case_document = case_document
@@ -15,15 +15,5 @@ class Permission
     end
   end
 
-  def get_source
-    @source
-  end
-
-  def get_destination
-    @destination
-  end
-
-  def get_case_document
-    @case_document
-  end  
+  attr_accessor :source, :destination, :case_document
 end

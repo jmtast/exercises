@@ -5,7 +5,5 @@ class CaseDocument
     @owner = owner
   end
 
-  def get_owner
-    @owner
-  end
+  attr_accessor :owner
 end
