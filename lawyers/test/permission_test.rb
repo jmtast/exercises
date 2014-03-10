@@ -15,11 +15,11 @@ class TestPermission < MiniTest::Unit::TestCase
   end
 
   def test_permission_has_a_source
-    assert_equal @lawyer, @permission.get_source
+    assert_equal @lawyer, @permission.source
   end
 
   def test_permission_has_a_destination
-    assert_equal @another_lawyer, @permission.get_destination
+    assert_equal @another_lawyer, @permission.destination
   end
 
   def test_permission_has_lawyers_as_source_and_destination
@@ -32,11 +32,11 @@ class TestPermission < MiniTest::Unit::TestCase
   end
 
   def test_permission_has_a_case_document
-    assert_equal @case_document, @permission.get_case_document
+    assert_equal @case_document, @permission.case_document
   end
 
   def test_permission_of_a_case_document_is_given_by_case_owner
-    assert_equal @case_document.get_owner, @lawyer
+    assert_equal @case_document.owner, @lawyer
     assert_raises(RuntimeError){
       wrong_permission = Permission.new(@another_lawyer, @lawyer, @case_document)
     }

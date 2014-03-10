@@ -12,6 +12,6 @@ class TestCaseDocument < MiniTest::Unit::TestCase
   end
 
   def test_case_gets_created_with_an_owner
-    assert_equal @lawyer, @case.get_owner
+    assert_equal @lawyer, @case.owner
   end
 end
