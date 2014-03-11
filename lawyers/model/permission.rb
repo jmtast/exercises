@@ -9,6 +9,7 @@ class Permission
         @source = source
         @destination = destination
         @case_document = case_document
+        @with_total_access = [@source, @destination]
         @@permissions << self
       else
         raise 'Only the case owner can give case permissions.'
@@ -22,5 +23,5 @@ class Permission
     @@permissions
   end
 
-  attr_accessor :source, :destination, :case_document
+  attr_accessor :source, :destination, :case_document, :with_total_access
 end
