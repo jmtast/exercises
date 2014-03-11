@@ -53,4 +53,9 @@ class TestPermission < MiniTest::Unit::TestCase
     assert_includes @permission.with_total_access, @lawyer
     assert_includes @permission.with_total_access, @another_lawyer
   end
+
+  def test_a_permission_knows_who_has_read_access
+    assert_includes @permission.with_read_access, @lawyer
+    assert_includes @permission.with_read_access, @another_lawyer
+  end
 end
