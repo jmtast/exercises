@@ -5,7 +5,7 @@ class Lawyer
 
   def initialize (name)
     @name = name
-    @@lawyers.push(self)
+    @@lawyers << self
   end
 
   def self.all

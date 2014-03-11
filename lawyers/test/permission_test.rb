@@ -41,4 +41,11 @@ class TestPermission < MiniTest::Unit::TestCase
       wrong_permission = Permission.new(@another_lawyer, @lawyer, @case_document)
     }
   end
+
+  def test_all_permissions_can_be_listed
+    another_case_document = CaseDocument.new(@another_lawyer)
+    another_permission = Permission.new(@another_lawyer, @lawyer, another_case_document)
+    assert_includes Permission.all, @permission
+    assert_includes Permission.all, another_permission
+  end
 end
