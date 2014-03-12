@@ -18,9 +18,10 @@ class GlobalPermission < Permission
   end
 
   def self.create(from, to, readonly = true)
+    new_permission = new(from, to, readonly)
     permissions[to] = [] unless permissions[to]
-    permissions[to] << [from, readonly]
-    new(from, to, readonly)
+    permissions[to] << new_permission
+    new_permission
   end
 
   def self.permissions
@@ -28,11 +29,7 @@ class GlobalPermission < Permission
   end
 
   def self.all
-    result = []
-    permissions.each_pair do |key, value|
-      value.each {|from| result << GlobalPermission.new(from.first, key, from.last)}
-    end
-    result
+    permissions.values.flatten
   end
 end
  
