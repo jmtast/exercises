@@ -2,8 +2,8 @@
 
 gem 'minitest'
 require 'minitest/autorun'
-require_relative '../model/lawyer.rb'
-require_relative '../model/case_document.rb'
+require_relative '../model/lawyer'
+require_relative '../model/case_document'
 
 class TestCaseDocument < MiniTest::Unit::TestCase
   def setup
