@@ -1,28 +1,52 @@
 # in model/permission.rb
 
 class Permission
-  @@permissions = []
+  attr :readonly
 
-  def initialize (source, destination, case_document)
-    if (source.instance_of?(Lawyer) && destination.instance_of?(Lawyer))
-      if (case_document.owner == source)
-        @source = source
-        @destination = destination
-        @case_document = case_document
-        @with_total_access = [@source, @destination]
-        @with_read_access = [@source, @destination]
-        @@permissions << self
-      else
-        raise 'Only the case owner can give case permissions.'
-      end
-    else
-      raise 'Objects giving and receiving permissions must be of class Lawyer'
-    end
+  def initialize(readonly)
+    @readonly = readonly
+  end
+end
+
+class GlobalPermission < Permission
+  attr :from, :to
+
+  def initialize(from, to, readonly)
+    super(readonly)
+    @from = from
+    @to = to
+  end
+
+  def self.create(from, to, readonly = true)
+    permissions[to] = [] unless permissions[to]
+    permissions[to] << [from, readonly]
+    new(from, to, readonly)
+  end
+
+  def self.permissions
+    @permissions ||= {}
   end
 
   def self.all
-    @@permissions
+    result = []
+    permissions.each_pair do |key, value|
+      value.each {|from| result << GlobalPermission.new(from.first, key, from.last)}
+    end
+    result
   end
-
-  attr_accessor :source, :destination, :case_document, :with_total_access, :with_read_access
+end
+ 
+class SinglePermission < Permission
+end
+ 
+class GrantedGlobalPermission < GlobalPermission
+end
+ 
+class DeniedGlobalPermission < GlobalPermission
+end
+ 
+class GrantedSinglePermission < SinglePermission
+end
+ 
+class DeniedSinglePermission < SinglePermission
 end

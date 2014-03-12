@@ -2,60 +2,39 @@
 
 gem 'minitest'
 require 'minitest/autorun'
-require_relative '../model/lawyer.rb'
-require_relative '../model/case_document.rb'
-require_relative '../model/permission.rb'
+require_relative '../model/lawyer'
+require_relative '../model/case_document'
+require_relative '../model/permission'
 
 class TestPermission < MiniTest::Unit::TestCase
+
+end
+
+class TestGlobalPermission < MiniTest::Unit::TestCase
   def setup
-    @lawyer = Lawyer.new('a_name')
-    @another_lawyer = Lawyer.new('another_name')
-    @case_document = CaseDocument.new(@lawyer)
-    @permission = Permission.new(@lawyer, @another_lawyer, @case_document)
+    @from = Lawyer.new('from')
+    @to = Lawyer.new('to')
   end
 
-  def test_permission_has_a_source
-    assert_equal @lawyer, @permission.source
+  def test_new_receives_from_to_and_readonly
+    global_permission = GlobalPermission.new(@from, @to, true)
+
+    assert_equal @from, global_permission.from
+    assert_equal @to, global_permission.to
+    assert global_permission.readonly
   end
 
-  def test_permission_has_a_destination
-    assert_equal @another_lawyer, @permission.destination
+  def test_create_returns_new_global_permission
+    assert_kind_of GlobalPermission, GlobalPermission.create(@from, @to)
   end
 
-  def test_permission_has_lawyers_as_source_and_destination
-    assert_raises(RuntimeError){
-      wrong_type_source = Permission.new(1,@another_lawyer, @case_document)
-    }
-    assert_raises(RuntimeError){
-      wrong_type_destination = Permission.new(@lawyer, 1, @case_document)
-    }
+  def test_readonly_is_true_by_default
+    assert GlobalPermission.create(@from, @to).readonly
+    refute GlobalPermission.create(@from, @to, false).readonly
   end
 
-  def test_permission_has_a_case_document
-    assert_equal @case_document, @permission.case_document
-  end
-
-  def test_permission_of_a_case_document_is_given_by_case_owner
-    assert_equal @case_document.owner, @lawyer
-    assert_raises(RuntimeError){
-      wrong_permission = Permission.new(@another_lawyer, @lawyer, @case_document)
-    }
-  end
-
-  def test_all_permissions_can_be_listed
-    another_case_document = CaseDocument.new(@another_lawyer)
-    another_permission = Permission.new(@another_lawyer, @lawyer, another_case_document)
-    assert_includes Permission.all, @permission
-    assert_includes Permission.all, another_permission
-  end
-
-  def test_a_permission_knows_who_has_total_access
-    assert_includes @permission.with_total_access, @lawyer
-    assert_includes @permission.with_total_access, @another_lawyer
-  end
-
-  def test_a_permission_knows_who_has_read_access
-    assert_includes @permission.with_read_access, @lawyer
-    assert_includes @permission.with_read_access, @another_lawyer
+  def test_global_permissions_can_be_listed
+    GlobalPermission.create(@from, @to)
+    assert GlobalPermission.all.any? {|global_permission| global_permission.from == @from && global_permission.to == @to && global_permission.readonly}
   end
 end
